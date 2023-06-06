@@ -28,7 +28,9 @@ import com.example.calculadoradegorjeta.ui.theme.CalculadoraDeGorjetaTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import java.text.NumberFormat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +64,14 @@ fun TipTimeScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         EditNumberField()
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = stringResource(id = R.string.tip_amount, ""),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -70,6 +80,8 @@ fun TipTimeScreen() {
 fun EditNumberField() {
 
     var amountInput by remember {mutableStateOf("")}
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
 
     TextField(
         value = amountInput,
@@ -80,6 +92,17 @@ fun EditNumberField() {
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
+private fun calculateTip(
+    amount: Double,
+    tipPercent: Double = 15.0
+): String {
+    val tip = tipPercent / 100 * amount
+
+    return NumberFormat.getCurrencyInstance().format(tip)
+}
+
+
+
 
 @Preview(showBackground = true)
 @Composable
