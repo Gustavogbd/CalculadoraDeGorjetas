@@ -3,6 +3,7 @@ package com.example.calculadoradegorjeta
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import java.text.NumberFormat
 
@@ -51,9 +53,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipTimeScreen() {
-    var amountInput by remember {mutableStateOf("")}
+    var amountInput by remember { mutableStateOf("") }
+    var tipInput by remember {mutableStateOf("")}
+
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    val tip = calculateTip(amount, tipPercent)
 
     Column(
         modifier = Modifier
@@ -70,7 +75,21 @@ fun TipTimeScreen() {
 
         EditNumberField(
             value = amountInput,
-            onValueChange = { amountInput = it}
+            onValueChange = { amountInput = it},
+            label = R.string.bill_amount,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            )
+        )
+        EditNumberField(
+            value = tipInput,
+            onValueChange = { tipInput = it},
+            label = R.string.how_was_the_service,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -87,17 +106,19 @@ fun TipTimeScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNumberField(
+    @StringRes label: Int,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions
 ) {
 
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(stringResource(id = R.string.cost_of_service))},
+        label = { Text(stringResource(label))},
         singleLine = true,
         modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = keyboardOptions
     )
 }
 private fun calculateTip(

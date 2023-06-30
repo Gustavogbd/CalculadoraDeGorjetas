@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Calculadora de Gorjeta</string>
     <string name="calculate_tip">Calcular Gorjeta</string>
-    <string name="cost_of_service">Custo do serviço</string>
+    <string name="bill_amount">Custo do serviço</string>
     <string name="tip_amount">Quantidade da gorjeta: %s</string>
+    <string name="how_was_the_service">Gorjeta (%)</string>
+    <string name="round_up_tip">Arredondar gorjeta?</string>
 </resources>
